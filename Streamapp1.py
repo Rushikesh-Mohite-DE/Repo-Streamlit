@@ -3,29 +3,17 @@ import pyodbc
 import pandas as pd
 import json
 import requests
-
-# Hardcoded Secrets (replace with your actual credentials)
-secrets = {
-    "sql": {
-        "server": ""DESKTOP-RCE6E1O",
-        "database": "DE_MIGR_DB",
-        "username": "test1",
-        "password": "cls",
-    },
-    "google_drive": {
-        "access_token": "ya29.a0ARW5m75wvEaloWYXYYGsRbjMwFt4IgspbX6osR4CBXh8A0J1BZRnAHHl5a4vcqfoVBon-lbh35z_xFISstdSgxJEmeXIns0j63NuDNZp1yhMD_dikIb4TI9o3Yg0AHK2voi8kGBDhs3usN-CmJbUZg6799WEsyNkunk0WIIOaCgYKAZ4SARISFQHGX2MiMx1INhPtYZQ6uufeZBGgnA0175"
-    },
-}
+import os
 
 # Streamlit app title
 st.title("SQL Server Data Fetch and Google Drive Upload")
 
 # Sidebar for input fields
 st.sidebar.header("SQL Server Connection Details")
-server = st.sidebar.text_input("Server Address", value=secrets["sql"]["server"])
-database = st.sidebar.text_input("Database Name", value=secrets["sql"]["database"])
-username = st.sidebar.text_input("Username", value=secrets["sql"]["username"])
-password = st.sidebar.text_input("Password", value=secrets["sql"]["password"], type="password")
+server = st.sidebar.text_input("Server Address", value=st.secrets.get("sql", {}).get("server", ""))
+database = st.sidebar.text_input("Database Name", value=st.secrets.get("sql", {}).get("database", ""))
+username = st.sidebar.text_input("Username", value=st.secrets.get("sql", {}).get("username", ""))
+password = st.sidebar.text_input("Password", value=st.secrets.get("sql", {}).get("password", ""), type="password")
 
 st.sidebar.header("Table Selection")
 table_name = st.sidebar.text_input("Table Name", value="DemoTable")
@@ -64,8 +52,12 @@ if st.sidebar.button("Fetch Data and Upload to Google Drive"):
         df.to_csv(csv_file, index=False)
         st.success(f"Data saved to {csv_file}")
 
-        # Google Drive Upload
-        access_token = secrets["google_drive"]["access_token"]
+        # Google Drive Upload - Replace with your access token
+        access_token = st.secrets.get("google_drive", {}).get("access_token", "")
+        if not access_token:
+            st.error("Google Drive access token is missing. Please add it to your secrets file.")
+            raise ValueError("Missing Google Drive access token.")
+
         headers = {"Authorization": f"Bearer {access_token}"}
 
         # Metadata
@@ -94,3 +86,8 @@ if st.sidebar.button("Fetch Data and Upload to Google Drive"):
     except Exception as e:
         st.error(f"An error occurred: {e}")
         st.stop()
+
+# Debugging: Check environment details
+if st.sidebar.checkbox("Show Debug Info"):
+    st.write("Environment Variables:")
+    st.json(dict(os.environ))
