@@ -1,9 +1,11 @@
 import streamlit as st
 import pyodbc
 import pandas as pd
+import json
+import requests
 
 # Streamlit app title
-st.title("SQL Server Data Fetch")
+st.title("SQL Server Data Fetch and Google Drive Upload")
 
 # Sidebar for input fields
 st.sidebar.header("SQL Server Connection Details")
@@ -16,7 +18,7 @@ st.sidebar.header("Table Selection")
 table_name = st.sidebar.text_input("Table Name", value="DemoTable")
 
 # Button to fetch data
-if st.sidebar.button("Fetch Data"):
+if st.sidebar.button("Fetch Data and Upload to Google Drive"):
     try:
         # Establish pyodbc connection
         connection_string = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}"
@@ -33,10 +35,38 @@ if st.sidebar.button("Fetch Data"):
         st.write("Fetched Data:")
         st.dataframe(df)
 
-        # Save data to a CSV file
+        # Save data to a CSV file locally
         csv_file = f"{table_name}.csv"
         df.to_csv(csv_file, index=False)
         st.success(f"Data saved to {csv_file}")
+
+        # Google Drive Upload - Replace with your access token
+        headers = {"Authorization": "Bearer ya29.a0ARW5m77dqcDk8xtHGl3s8X6kHqO5rBVuyE-RH84CfvaGkZ_oaleCX2szq6s-ZB77O7ivwlin5Sz0PY482to87APAQCG0J9r1ELln0Ez0oAd3TKFxgo7-lVyyJ8hZLZfdgyBRU_zcmAM5utkF9cLoDf92fl7GKqmWR52x0IYmaCgYKAYASARISFQHGX2Mi5cWUBDSoC4lf_aW_Zy-Pkg0175"}  # Make sure to replace 'YOUR_ACCESS_TOKEN' with the actual access token
+
+        # Metadata
+        para = {
+            "name": csv_file,
+        }
+
+        # Open the CSV file to upload
+        files = {
+            'data': ('metadata', json.dumps(para), 'application/json'),
+            'file': open(csv_file, "rb")
+        }
+
+        # Upload file to Google Drive
+        response = requests.post(
+            "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+            headers=headers,
+            files=files
+        )
+
+        # Handling the response
+        if response.status_code == 200:
+            st.success("File uploaded successfully to Google Drive.")
+            st.json(response.json())
+        else:
+            st.error(f"Failed to upload file: {response.status_code}, {response.text}")
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
