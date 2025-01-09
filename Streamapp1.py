@@ -21,7 +21,7 @@ table_name = st.sidebar.text_input("Table Name", value="DemoTable")
 if st.sidebar.button("Fetch Data and Upload to Google Drive"):
     try:
         connection_string = (
-            f"DRIVER={{SQL Server}};"
+            f"DRIVER={{ODBC Driver 17 for SQL Serverr}};"
             f"SERVER={server};"
             f"DATABASE={database};"
             f"UID={username};"
