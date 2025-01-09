@@ -17,75 +17,63 @@ password = st.sidebar.text_input("Password", value="cls", type="password")
 st.sidebar.header("Table Selection")
 table_name = st.sidebar.text_input("Table Name", value="DemoTable")
 
-# Cache the database connection using st.cache_resource
-@st.cache_resource
-def connect_db():
+# Button to fetch data
+if st.sidebar.button("Fetch Data and Upload to Google Drive"):
     try:
-        # Establish pyodbc connection
-        connection_string = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}"
+        connection_string = (
+            f"DRIVER={{SQL Server}};"
+            f"SERVER={server};"
+            f"DATABASE={database};"
+            f"UID={username};"
+            f"PWD={password}"
+        )
         conn = pyodbc.connect(connection_string)
-        st.success("Database connection established.")
-        return conn
-    except Exception as e:
-        st.error(f"Failed to connect to the database: {e}")
-        return None
 
-# Fetch data using the connection
-def fetch_data(connection):
-    try:
+        # Fetch data
         query = f"SELECT * FROM {table_name}"
-        df = pd.read_sql(query, connection)
+        df = pd.read_sql(query, conn)
+
+        # Close the connection
+        conn.close()
+
+        # Display data
         st.write("Fetched Data:")
         st.dataframe(df)
-        return df
-    except Exception as e:
-        st.error(f"Failed to fetch data: {e}")
-        return None
 
-# Main function
-def main():
-    connection = connect_db()
-    if connection:
-        data = fetch_data(connection)
-        if data is not None:
-            st.success("Data fetched successfully!")
-            # Save data to a CSV file locally
-            csv_file = f"{table_name}.csv"
-            data.to_csv(csv_file, index=False)
-            st.success(f"Data saved to {csv_file}")
+        # Save data to a CSV file locally
+        csv_file = f"{table_name}.csv"
+        df.to_csv(csv_file, index=False)
+        st.success(f"Data saved to {csv_file}")
 
-            # Google Drive Upload - Replace with your access token
-            headers = {"Authorization": "Bearer YOUR_ACCESS_TOKEN_HERE"}  # Replace with your actual access token
+        # Google Drive Upload - Replace with your access token
+        headers = {
+            "Authorization": "Bearer YOUR_ACTUAL_ACCESS_TOKEN_HERE"
+        }
 
-            # Metadata
-            para = {
-                "name": csv_file,
-            }
+        # Metadata
+        para = {
+            "name": csv_file,
+        }
 
-            # Open the CSV file to upload
-            files = {
-                'data': ('metadata', json.dumps(para), 'application/json'),
-                'file': open(csv_file, "rb")
-            }
+        # Open the CSV file to upload
+        files = {
+            'data': ('metadata', json.dumps(para), 'application/json'),
+            'file': open(csv_file, "rb")
+        }
 
-            # Upload file to Google Drive
-            response = requests.post(
-                "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-                headers=headers,
-                files=files
-            )
+        # Upload file to Google Drive
+        response = requests.post(
+            "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+            headers=headers,
+            files=files
+        )
 
-            # Handling the response
-            if response.status_code == 200:
-                st.success("File uploaded successfully to Google Drive.")
-                st.json(response.json())
-            else:
-                st.error(f"Failed to upload file: {response.status_code}, {response.text}")
+        # Handling the response
+        if response.status_code == 200:
+            st.success("File uploaded successfully to Google Drive.")
+            st.json(response.json())
         else:
-            st.error("Data fetching failed.")
-    else:
-        st.error("Database connection failed.")
+            st.error(f"Failed to upload file: {response.status_code}, {response.text}")
 
-# Run the Streamlit app
-if __name__ == "__main__":
-    main()
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
