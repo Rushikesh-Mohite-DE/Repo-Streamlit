@@ -2,35 +2,32 @@ import streamlit as st
 import pyodbc
 
 # Initialize connection.
+# Uses st.cache_resource to only run once.
 @st.cache_resource
 def init_connection():
     return pyodbc.connect(
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        f"SERVER={st.secrets['server']};"
-        f"DATABASE={st.secrets['database']};"
-        f"UID={st.secrets['username']};"
-        f"PWD={st.secrets['password']}"
+        "DRIVER={ODBC Driver 17 for SQL Server};SERVER="
+        + st.secrets["server"]
+        + ";DATABASE="
+        + st.secrets["database"]
+        + ";UID="
+        + st.secrets["username"]
+        + ";PWD="
+        + st.secrets["password"]
     )
 
 conn = init_connection()
 
-# Function to run a query and fetch results
+# Perform query.
+# Uses st.cache_data to only rerun when the query changes or after 10 min.
 @st.cache_data(ttl=600)
-def fetch_data(user_value):
-    query = f"""
-    SELECT *
-    FROM DemoTable;
-    """
+def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
         return cur.fetchall()
 
-# Input for query parameter
-user_value = st.text_input("Enter a value for column1:", "default_value")
+rows = run_query("SELECT * from mytable;")
 
-# Call the fetch_data function and display results
-if user_value:
-    results = fetch_data(user_value)
-    st.write("Query Results:")
-    for result in results:
-        st.write(f"Column1: {result[0]}, Column2: {result[1]}")
+# Print results.
+for row in rows:
+    st.write(f"{row[0]} has a :{row[1]}:")
