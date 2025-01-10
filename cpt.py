@@ -16,21 +16,26 @@ table_name = st.sidebar.text_input("Table Name", "your_table_name")
 # Function to connect to SQL Server and fetch data
 def fetch_data(server, database, username, password, table_name):
     try:
-        # Establish the connection
         conn = pyodbc.connect(
             f"DRIVER={{ODBC Driver 17 for SQL Server}};"
             f"SERVER={server};"
             f"DATABASE={database};"
             f"UID={username};"
-            f"PWD={password}"
+            f"PWD={password}",
+            timeout=5  # Set a timeout value in seconds
         )
         query = f"SELECT * FROM {table_name}"
         data = pd.read_sql(query, conn)
         conn.close()
         return data
+    except pyodbc.InterfaceError as ie:
+        st.error(f"Interface Error: {ie}")
+    except pyodbc.Error as e:
+        st.error(f"Database Error: {e}")
     except Exception as e:
-        st.error(f"Error: {e}")
-        return None
+        st.error(f"Unexpected Error: {e}")
+    return None
+
 
 # Fetch and display data when the user clicks the button
 if st.sidebar.button("Fetch Data"):
