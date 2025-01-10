@@ -19,10 +19,10 @@ def fetch_data(server, database, username, password, table_name):
         # Establish the connection
         conn = pyodbc.connect(
             f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-            f"SERVER={DESKTOP-RCE6E1O};"
-            f"DATABASE={DE_MIGR_DB};"
-            f"UID={test1};"
-            f"PWD={cls}"
+            f"SERVER={server};"
+            f"DATABASE={database};"
+            f"UID={username};"
+            f"PWD={password}"
         )
         query = f"SELECT * FROM {table_name}"
         data = pd.read_sql(query, conn)
