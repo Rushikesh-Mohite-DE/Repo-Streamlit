@@ -10,9 +10,9 @@ st.title("SQL Server Data Fetch and Google Drive Upload")
 # Sidebar for input fields
 st.sidebar.header("SQL Server Connection Details")
 server = st.sidebar.text_input("Server Address", value="DESKTOP-RCE6E1O")
-database = st.sidebar.text_input("Database Name", value="DE_MIGR_DB")
-username = st.sidebar.text_input("Username", value="test1")
-password = st.sidebar.text_input("Password", value="cls", type="password")
+database = st.sidebar.text_input("DATABASE Name", value="DE_MIGR_DB")
+username = st.sidebar.text_input("UID", value="test1")
+password = st.sidebar.text_input("PWD", value="cls", type="password")
 
 st.sidebar.header("Table Selection")
 table_name = st.sidebar.text_input("Table Name", value="DemoTable")
