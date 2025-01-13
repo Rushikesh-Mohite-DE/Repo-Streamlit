@@ -3,5 +3,5 @@ pyodbc
 pandas
 requests
 sqlalchemy
-urllib
+urllib.parse
 io
