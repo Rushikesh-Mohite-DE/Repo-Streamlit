@@ -4,5 +4,4 @@ pandas
 requests
 sqlalchemy
 create_engine
-urllib.parse
 io
