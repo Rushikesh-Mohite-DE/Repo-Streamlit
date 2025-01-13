@@ -3,5 +3,4 @@ pyodbc
 pandas
 requests
 sqlalchemy
-create_engine
 io
