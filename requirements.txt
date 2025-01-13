@@ -2,3 +2,6 @@ streamlit
 pyodbc
 pandas
 requests
+sqlalchemy
+urllib
+io
