@@ -3,4 +3,3 @@ pyodbc
 pandas
 requests
 sqlalchemy
-io
