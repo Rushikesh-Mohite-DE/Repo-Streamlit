@@ -7,9 +7,9 @@ oracledb.init_oracle_client(wallet_location="App/Wallet_DATAENTREGA")  # Direct 
 try:
     # Example: Connect to the Oracle database
     connection = oracledb.connect(
-        user="your_username",
-        password="your_password",
-        dsn="your_dsn"
+        user="WS_2005_SR",
+        password="Dataentrega@2024",
+        dsn="WS_2005_SR"
     )
 
     # Example: Cursor execution
