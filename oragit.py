@@ -11,7 +11,9 @@ st.title("Fetch Data from Oracle Table with GitHub-Hosted tnsnames.ora")
 github_url = "https://raw.githubusercontent.com/Rushikesh-Mohite-DE/Repo-Streamlit/App/tnsnames.ora"  # Replace with your URL
 
 # Local path to save tnsnames
-local_tns_path = "/tmp/tnsnames.ora"  # Use a writable directory for the deployment environment
+local_tns_path = "D:\Oracle\Wallet_DATAENTREGA\tnsnames.ora"  # Use a writable directory for the deployment environment
+
+
 
 # Download tnsnames.ora from GitHub
 try:
