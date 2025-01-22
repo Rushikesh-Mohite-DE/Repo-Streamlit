@@ -1,12 +1,12 @@
 import streamlit as st
 import oracledb
 
-
-ORACLE_HOST = "adb.ap-mumbai-1.oraclecloud.com"  # Replace with your Oracle DB host
-ORACLE_PORT = "1522"           # Replace with your Oracle DB port
-ORACLE_SERVICE_NAME = "g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"  # Replace with your service name
-ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"          # Replace with your username
-ORACLE_PASSWORD = "Melbourne@2025"          # Replace with your password
+# Oracle Database Credentials
+ORACLE_HOST = "adb.ap-mumbai-1.oraclecloud.com"
+ORACLE_PORT = "1522"
+ORACLE_SERVICE_NAME = "g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
+ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"
+ORACLE_PASSWORD = "Melbourne@2025"
 
 def connect_to_oracle():
     """Connect to Oracle Database using oracledb in thin mode."""
@@ -14,8 +14,7 @@ def connect_to_oracle():
         connection = oracledb.connect(
             user=ORACLE_USERNAME,
             password=ORACLE_PASSWORD,
-            dsn=f"{ORACLE_HOST}:{ORACLE_PORT}/{ORACLE_SERVICE_NAME}",
-            mode=oracledb.DEFAULT_AUTH
+            dsn=f"{ORACLE_HOST}:{ORACLE_PORT}/{ORACLE_SERVICE_NAME}"
         )
         return connection
     except oracledb.DatabaseError as e:
@@ -24,10 +23,10 @@ def connect_to_oracle():
 
 def main():
     st.title("Oracle Cloud Database Access")
-    
+
     if st.button("Connect to Oracle"):
         connection = connect_to_oracle()
-        
+
         if connection:
             st.success("Successfully connected to Oracle Database!")
             
@@ -49,4 +48,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
