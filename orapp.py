@@ -1,9 +1,10 @@
-import streamlit as st
 import oracledb
 
-# Initialize Oracle client with wallet and client path stored in GitHub repository
+# Initialize Oracle client using the wallet and configuration
 oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA", 
-                            lib_dir="App/Wallet_DATAENTREGA/lib")  # Path to wallet and client libraries
+                            wallet_location="App/Wallet_DATAENTREGA/ewallet.p12", 
+                            private_key_password="Melbourne@2025")  # Replace with your actual password
+
 ORACLE_DSN = "adb.ap-mumbai-1.oraclecloud.com:1522/g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
 ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"
 ORACLE_PASSWORD = "Melbourne@2025"
@@ -15,7 +16,7 @@ try:
         password=ORACLE_PASSWORD,
         dsn=ORACLE_DSN
     )
-    st.write("Connected to Oracle Cloud DB successfully!")
+    print("Connected to Oracle Cloud DB successfully!")
     
     # Example query - replace with your actual query
     cursor = connection.cursor()
@@ -23,10 +24,10 @@ try:
     rows = cursor.fetchall()
 
     for row in rows:
-        st.write(row)
+        print(row)
 
 except oracledb.Error as e:
-    st.error(f"Error connecting to Oracle: {e}")
+    print(f"Error connecting to Oracle: {e}")
 
 finally:
     if 'connection' in locals() or 'connection' in globals():
