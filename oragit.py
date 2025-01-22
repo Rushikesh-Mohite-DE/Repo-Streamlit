@@ -28,11 +28,14 @@ except Exception as e:
 # Set TNS_ADMIN to the directory containing tnsnames.ora
 os.environ["TNS_ADMIN"] = "/tmp"  # Adjust to the local path's directory
 
-# Input fields for Oracle database connection details
-username = st.text_input("Username", placeholder="Enter Username")
-password = st.text_input("Password", placeholder="Enter Password", type="password")
-dsn = st.text_input("DSN Name", placeholder="Enter DSN Name (from tnsnames.ora)")
-table_name = st.text_input("Table Name", placeholder="Enter the table name to fetch data")
+
+
+
+dsn = "WS_2005_SR"  # Replace with your actual DSN
+username = "WS_2005_SR"  # Replace with your actual username
+password = "Dataentrega@2024"  # Replace with your actual password
+# Hardcoded table name
+table_name = "V_DE_WHRM_1002"  # Replace with the actual table name
 
 # Button to fetch and display data
 if st.button("Fetch Data"):
