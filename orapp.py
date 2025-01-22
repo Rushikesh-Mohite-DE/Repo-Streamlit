@@ -1,50 +1,36 @@
 import streamlit as st
 import oracledb
+import os
 
-# Oracle Database Credentials
-ORACLE_HOST = "adb.ap-mumbai-1.oraclecloud.com"
-ORACLE_PORT = "1522"
-ORACLE_SERVICE_NAME = "g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
-ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"
-ORACLE_PASSWORD = "Melbourne@2025"
+# Load Oracle credentials and wallet path from environment variables or GitHub secrets
+wallet_path = os.getenv("ORACLE_WALLET_PATH", "/default/path/to/your/wallet")
+oracle_username = os.getenv("ORACLE_USERNAME", "DE_ORA_CLOUD_ADMIN")
+oracle_password = os.getenv("ORACLE_PASSWORD", "Melbourne@2025")
+oracle_dsn = os.getenv("ORACLE_DSN", "adb.ap-mumbai-1.oraclecloud.com:1522/g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com")
 
-def connect_to_oracle():
-    """Connect to Oracle Database using oracledb in thin mode."""
-    try:
-        connection = oracledb.connect(
-            user=ORACLE_USERNAME,
-            password=ORACLE_PASSWORD,
-            dsn=f"{ORACLE_HOST}:{ORACLE_PORT}/{ORACLE_SERVICE_NAME}"
-        )
-        return connection
-    except oracledb.DatabaseError as e:
-        st.error(f"Error connecting to Oracle: {e}")
-        return None
+# Initialize Oracle client with wallet path
+oracledb.init_oracle_client(config_dir=wallet_path)
 
-def main():
-    st.title("Oracle Cloud Database Access")
+# Connect to Oracle Cloud Database
+try:
+    connection = oracledb.connect(
+        user=oracle_username,
+        password=oracle_password,
+        dsn=oracle_dsn
+    )
+    st.write("Connected to Oracle Cloud DB successfully!")
+    
+    # Example query - replace this with your actual query
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM your_table_name")
+    rows = cursor.fetchall()
 
-    if st.button("Connect to Oracle"):
-        connection = connect_to_oracle()
+    for row in rows:
+        st.write(row)
 
-        if connection:
-            st.success("Successfully connected to Oracle Database!")
-            
-            # Execute a simple query
-            query = "SELECT * FROM DUAL"
-            st.write(f"Executing query: {query}")
-            
-            try:
-                with connection.cursor() as cursor:
-                    cursor.execute(query)
-                    result = cursor.fetchall()
-                    st.write("Query Result:", result)
-            except oracledb.DatabaseError as e:
-                st.error(f"Error executing query: {e}")
-            finally:
-                connection.close()
-        else:
-            st.error("Failed to connect to Oracle Database.")
+except oracledb.Error as e:
+    st.error(f"Error connecting to Oracle: {e}")
 
-if __name__ == "__main__":
-    main()
+finally:
+    if 'connection' in locals() or 'connection' in globals():
+        connection.close()
