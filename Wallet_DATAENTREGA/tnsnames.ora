@@ -1,0 +1,15 @@
+DATAENTREGA = 
+  (DESCRIPTION = 
+    (ADDRESS = (PROTOCOL = TCPS)(HOST = adb.ap-mumbai-1.oraclecloud.com)(PORT = 1522))
+    (CONNECT_DATA = 
+      (SERVICE_NAME = g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com)
+    )
+  )
+WS_2005_SR = 
+  (DESCRIPTION = 
+    (ADDRESS = (PROTOCOL = TCPS)(HOST = adb.ap-mumbai-1.oraclecloud.com)(PORT = 1522))
+    (CONNECT_DATA = 
+      (SERVICE_NAME = g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com)
+    )
+  )
+  
