@@ -1,34 +1,33 @@
 import oracledb
 
 # Initialize Oracle client using the wallet and configuration
-oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA", 
-                            wallet_location="App/Wallet_DATAENTREGA/ewallet.p12", 
-                            private_key_password="Melbourne@2025")  # Replace with your actual password
+oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA",
+                            wallet_password="Melbourne@2025")  # Adjust wallet password as necessary
 
-ORACLE_DSN = "adb.ap-mumbai-1.oraclecloud.com:1522/g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
-ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"
-ORACLE_PASSWORD = "Melbourne@2025"
-
-# Connect to Oracle Cloud Database
+# Now you can proceed with your database operations
 try:
+    # Example: Connect to the Oracle database
     connection = oracledb.connect(
-        user=ORACLE_USERNAME,
-        password=ORACLE_PASSWORD,
-        dsn=ORACLE_DSN
+        user="your_username",
+        password="your_password",
+        dsn="your_dsn"
     )
-    print("Connected to Oracle Cloud DB successfully!")
-    
-    # Example query - replace with your actual query
+
+    # Example: Cursor execution
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM your_table_name")  # Replace with your actual table
+
+    # Execute a simple query
+    cursor.execute("SELECT * FROM your_table_name")
+
+    # Fetch results
     rows = cursor.fetchall()
 
     for row in rows:
         print(row)
 
 except oracledb.Error as e:
-    print(f"Error connecting to Oracle: {e}")
+    print("Oracle Database error:", e)
 
 finally:
-    if 'connection' in locals() or 'connection' in globals():
+    if connection:
         connection.close()
