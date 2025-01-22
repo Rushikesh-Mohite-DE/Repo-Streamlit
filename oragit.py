@@ -17,8 +17,13 @@ WS_2005_SR =
   )
 """
 
-# Local path to save the tnsnames.ora file
-local_tns_path = "D:\\Oracle\\Wallet_DATAENTREGA\\tnsnames.ora"  # Adjust path as needed
+# Path to save the tnsnames.ora file
+local_tns_dir = "D:\\Oracle\\Wallet_DATAENTREGA"  # Change this to a valid writable path
+local_tns_path = os.path.join(local_tns_dir, "tnsnames.ora")
+
+# Ensure the directory exists
+if not os.path.exists(local_tns_dir):
+    os.makedirs(local_tns_dir)
 
 # Write TNS data to the file
 try:
@@ -29,7 +34,7 @@ except Exception as e:
     st.error(f"Failed to create tnsnames.ora: {e}")
 
 # Set TNS_ADMIN to the directory containing tnsnames.ora
-os.environ["TNS_ADMIN"] = os.path.dirname(local_tns_path)
+os.environ["TNS_ADMIN"] = local_tns_dir
 
 # Database connection details
 dsn = "WS_2005_SR"  # TNS alias
@@ -61,5 +66,7 @@ if st.button("Fetch Data"):
             # Close the connection
             conn.close()
 
+        except oracledb.Error as e:
+            st.error(f"Oracle error occurred: {e}")
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"An unexpected error occurred: {e}")
