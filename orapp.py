@@ -2,7 +2,7 @@ import streamlit as st
 import oracledb
 import os
 
-# Load Oracle credentials and wallet path from environment variables or GitHub secrets
+# Load Oracle credentials and wallet path from GitHub Secrets
 wallet_path = os.getenv("ORACLE_WALLET_PATH", "/default/path/to/your/wallet")
 oracle_username = os.getenv("ORACLE_USERNAME", "DE_ORA_CLOUD_ADMIN")
 oracle_password = os.getenv("ORACLE_PASSWORD", "Melbourne@2025")
