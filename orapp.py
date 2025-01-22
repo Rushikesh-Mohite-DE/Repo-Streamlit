@@ -1,13 +1,12 @@
 import streamlit as st
 import oracledb
 
-# Oracle Database credentials (hardcoded for cloud deployment)
+# Initialize Oracle client with wallet and client path stored in GitHub repository
+oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA", 
+                            lib_dir="App/Wallet_DATAENTREGA/lib")  # Path to wallet and client libraries
+ORACLE_DSN = "adb.ap-mumbai-1.oraclecloud.com:1522/g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
 ORACLE_USERNAME = "DE_ORA_CLOUD_ADMIN"
 ORACLE_PASSWORD = "Melbourne@2025"
-ORACLE_DSN = "adb.ap-mumbai-1.oraclecloud.com:1522/g10916f2e32ac91_dataentrega_high.adb.oraclecloud.com"
-
-# Initialize Oracle client with wallet path stored in GitHub repository
-oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA")  # Path to wallet in GitHub repository
 
 # Connect to Oracle Cloud Database
 try:
