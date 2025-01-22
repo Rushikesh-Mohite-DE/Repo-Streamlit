@@ -1,8 +1,7 @@
 import oracledb
 
 # Initialize Oracle client using the wallet and configuration
-oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA",
-                            wallet_password="Melbourne@2025")  # Adjust wallet password as necessary
+oracledb.init_oracle_client(config_dir="App/Wallet_DATAENTREGA")  # No wallet_password needed
 
 # Now you can proceed with your database operations
 try:
